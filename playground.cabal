@@ -1,0 +1,19 @@
+cabal-version: 3.0
+name:          playground
+version:       0.1.0.0
+license:       MIT
+license-file:  LICENSE
+author:        Arnau Abella
+maintainer:    arnauabella@gmail.com
+build-type:    Simple
+
+common warnings
+  ghc-options: -Wall
+
+executable playground
+  import:           warnings
+  main-is:          Main.hs
+  other-modules:    DecideConstr
+  build-depends:    base ^>=4.16
+  hs-source-dirs:   app
+  default-language: Haskell2010
