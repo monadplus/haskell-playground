@@ -13,7 +13,15 @@ common warnings
 executable playground
   import:           warnings
   main-is:          Main.hs
-  other-modules:    DecideConstr
-  build-depends:    base ^>=4.16
+  other-modules:
+    DecideConstr
+    IxMonad
+
+  build-depends:
+    , base                  ^>=4.16
+    , do-notation           ^>=0.1
+    , first-class-families  ^>=0.8
+    , indexed               ^>=0.1
+
   hs-source-dirs:   app
   default-language: Haskell2010
