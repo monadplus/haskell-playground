@@ -15,6 +15,7 @@ executable playground
   main-is:          Main.hs
   other-modules:
     DecideConstr
+    HasC
     IxMonad
 
   build-depends:
