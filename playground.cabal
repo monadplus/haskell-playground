@@ -1,4 +1,4 @@
-cabal-version: 3.0
+cabal-version: 3.4
 name:          playground
 version:       0.1.0.0
 license:       MIT
@@ -27,3 +27,18 @@ executable playground
 
   hs-source-dirs:   app
   default-language: Haskell2010
+
+-- Don't forget to `cabal configure cabal configure --disable-documentation --enable-library-profiling`
+benchmark pointerChasing
+  type:             exitcode-stdio-1.0
+  default-language: Haskell2010
+  ghc-options:      -fforce-recomp -threaded -rtsopts -prof -eventlog
+  build-depends:
+    , base        >=4.15
+    , containers
+    , deepseq
+    , gauge
+    , random
+
+  hs-source-dirs:   bench/PointerChasing
+  main-is:          Main.hs
