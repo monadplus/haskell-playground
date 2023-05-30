@@ -1,6 +1,11 @@
+# cabal
 dist
 dist-newstyle
 tags
 *.hp
 *.eventlog
 *.html
+
+# ghc
+ghc/*
+!ghc/*.hs
