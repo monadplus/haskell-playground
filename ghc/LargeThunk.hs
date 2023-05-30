@@ -15,7 +15,7 @@ import Control.DeepSeq
 import Data.Function
 import Data.List (foldl', maximumBy, permutations, sortBy)
 import Data.Map.Strict (Map)
-import qualified Data.Map.Strict as M
+import Data.Map.Strict qualified as M
 import Debug.Trace
 import GHC.Generics (Generic)
 import System.Environment (getArgs)
@@ -60,16 +60,16 @@ data Rating = Rating
   deriving anyclass (NFData)
 
 -- $ ghc -eventlog -rtsopts -O2 LargeThunk
+
 -- $ ./LargeThunk 100000 100000 30000000 +RTS -l -hT -i0.5 -RTS
+
 main :: IO ()
 main = do
-  -- Parse DB size from arguments
   [nUsersStr, nMoviesStr, nRatingsStr] <- getArgs
   let nUsers = read nUsersStr
       nMovies = read nMoviesStr
       nRatings = read nRatingsStr
 
-  -- Create the DB
   putStrLn $
     "Creating the DB with size ("
       ++ show nUsers
@@ -86,9 +86,8 @@ main = do
                   [ User name trust
                     | name <-
                         take nUsers $
-                          fmap unwords $
-                            cycle $
-                              permutations ["abcdefghijklmnopqrstuvwxyz"]
+                          cycle $
+                            permutations "abcdefghijklmnopqrstuvwxyz"
                     | trust <- cycle [0.0, 0.1 .. 1.0]
                   ]
 
@@ -119,10 +118,10 @@ main = do
 
   do
     let msg = "DB created."
-    traceEventIO msg
+    traceMarkerIO msg
     putStrLn msg
-  putStrLn "Hit ENTER to continue."
-  _ <- getLine
+  -- putStrLn "Hit ENTER to continue."
+  -- _ <- getLine
 
   -- A single user's favorite movie.
   do
@@ -156,6 +155,8 @@ main = do
             ( \case
                 Nothing -> Just (userTrust * score, userTrust)
                 Just (weightedScore, weight) ->
+                  -- let !weightedScore' = weightedScore + (userTrust * score)
+                  --     !weight' = weight + userTrust
                   let weightedScore' = weightedScore + (userTrust * score)
                       weight' = weight + userTrust
                    in Just (weightedScore', weight')
@@ -163,14 +164,15 @@ main = do
             movieID
             weights
           where
+            -- !userTrust = trust ((users movieDB) M.! userID)
             userTrust = trust ((users movieDB) M.! userID)
 
     putStrLn "Top 10 movies:"
     putStrLn $ unlines $ fmap show $ take 10 $ reverse $ movieRatings
 
-  traceEventIO "Top 10 movies done."
-  putStrLn "Hit ENTER to continue."
-  _ <- getLine
+  traceMarkerIO "Top 10 movies done."
+  -- putStrLn "Hit ENTER to continue."
+  -- _ <- getLine
 
   touch movieDB
 
