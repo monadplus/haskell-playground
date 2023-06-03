@@ -10,3 +10,6 @@ tags
 ghc/*
 !ghc/*.hs
 !ghc/Makefile
+
+# nix
+result
