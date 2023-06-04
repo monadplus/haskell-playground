@@ -2,12 +2,16 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
     systems.url = "github:nix-systems/x86_64-linux";
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     flake-utils = {
       url = "github:numtide/flake-utils";
       # Now eachDefaultSystem is only using ["x86_64-linux"]
       inputs.systems.follows = "systems";
     };
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, flake-utils, pre-commit-hooks, ... }:
