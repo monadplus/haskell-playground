@@ -1,13 +1,8 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
-    systems.url = "github:nix-systems/x86_64-linux";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      # Now eachDefaultSystem is only using ["x86_64-linux"]
-      inputs.systems.follows = "systems";
-    };
+    flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -20,7 +15,17 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, pre-commit-hooks, gitignore, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+    let
+      lib = nixpkgs.lib;
+
+      defaultSystems = with flake-utils.lib.system; [
+        x86_64-linux
+        # x86_64-darwin
+        # aarch64-linux
+        # aarch64-darwin
+      ];
+    in
+    flake-utils.lib.eachSystem defaultSystems (system:
       let
         inherit (gitignore.lib) gitignoreSource;
 
