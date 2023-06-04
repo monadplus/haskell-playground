@@ -24,8 +24,9 @@ import System.Random.Stateful (newIOGenM, uniformRM)
 
 stricter_mean :: [Double] -> Double
 stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
-  where (s, ln)        = foldl' step (0,0) xs
-        step (!s, !ln) a = (s + a, ln + 1)
+  where
+    (s, ln) = foldl' step (0, 0) xs
+    step (!s, !ln) a = (s + a, ln + 1)
 
 strict_mean :: [Double] -> Double
 strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
@@ -40,8 +41,8 @@ main = do
   wait
   traceMarkerIO "Bench Initialization"
   !seed <- newIOGenM (mkStdGen 1729)
-  let genValue = fmap force uniformRM (0,500000) seed >>= evaluate
-  test_values <- replicateM 50000 genValue            >>= evaluate . force
+  let genValue = fmap force uniformRM (0, 500000) seed >>= evaluate
+  test_values <- replicateM 50000 genValue >>= evaluate . force
   traceMarkerIO "End Bench Initialization"
   wait
   -- print $! lazy_mean test_values

@@ -16,3 +16,6 @@ result
 
 # direnv
 .direnv
+
+# pre-commit-hooks.nix
+.pre-commit-config.yaml

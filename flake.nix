@@ -1,10 +1,16 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
+    systems.url = "github:nix-systems/x86_64-linux";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      # Now eachDefaultSystem is only using ["x86_64-linux"]
+      inputs.systems.follows = "systems";
+    };
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, pre-commit-hooks, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         overlay = self: super: {
@@ -21,15 +27,17 @@
       {
         packages = {
           inherit (haskellPackages) playground;
+
           default = haskellPackages.playground;
         };
 
-        defaultPackage = self.packages.${system}.default;
-
         devShells.default = haskellPackages.shellFor {
+          inherit (self.checks.${system}.pre-commit-check) shellHook;
+
           packages = p: [
             p.playground
           ];
+
           buildInputs = with haskellPackages; [
             cabal-install
             haskell-language-server
@@ -37,6 +45,16 @@
           ];
         };
 
-        devShell = self.devShells.${system}.default;
-      });
+        checks = {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixpkgs-fmt.enable = true;
+              ormolu.enable = true;
+              cabal-fmt.enable = true;
+            };
+          };
+        };
+      }
+    );
 }
