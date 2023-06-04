@@ -13,3 +13,6 @@ ghc/*
 
 # nix
 result
+
+# direnv
+.direnv
