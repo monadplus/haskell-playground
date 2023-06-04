@@ -9,7 +9,6 @@
     };
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
-      # Same nixpkgs
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -30,20 +29,43 @@
         inherit (gitignore.lib) gitignoreSource;
 
         overlay = self: super: {
-          playground =
-            self.callCabal2nix "playground" (gitignoreSource ./cabal) {
-              transformers = self.transformers_0_6_1_0;
+          haskell = super.haskell // {
+            packages = super.haskell.packages // {
+              ghc928 = super.haskell.packages.ghc928.override (old: {
+                overrides =
+                  let
+                    oldOverrides = old.overrides or (_: _: { });
+
+                    manualOverrides = haskPkgsNew: haskPkgsOld:
+                      {
+                        playground =
+                          haskPkgsOld.playground.override {
+                            transformers = haskPkgsNew.transformers_0_6_1_0;
+                          };
+                      };
+
+                    packageSources =
+                      self.haskell.lib.packageSourceOverrides {
+                        playground = gitignoreSource ./cabal;
+                      };
+
+                  in
+                  self.lib.fold self.lib.composeExtensions oldOverrides [
+                    packageSources
+                    manualOverrides
+                  ];
+              });
             };
+          };
         };
 
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        haskellPackages = pkgs.haskellPackages.extend overlay;
+        config.allowBroken = true;
+        pkgs = import nixpkgs { inherit config system; overlays = [ overlay ]; };
+        haskellPackages = pkgs.haskell.packages.ghc928;
       in
       {
         packages = {
           inherit (haskellPackages) playground;
-
           default = haskellPackages.playground;
         };
 
@@ -57,10 +79,16 @@
           buildInputs = with haskellPackages; [
             cabal-install
             haskell-language-server
+            pkgs.nixpkgs-fmt
+            ormolu
+            cabal-fmt
             ghcid
+            hlint
           ];
         };
 
+        # nix check
+        # nix build .#checks.x86_64-linux.pre-commit-check
         checks = {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
