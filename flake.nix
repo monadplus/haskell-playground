@@ -1,6 +1,4 @@
 {
-  description = "My haskell application";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
@@ -9,31 +7,36 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        overlay = self: super: {
+          playground =
+            self.callCabal2nix "playground" ./cabal {
+              transformers = self.transformers_0_6_1_0;
+            };
+        };
+
         pkgs = nixpkgs.legacyPackages.${system};
 
-        haskellPackages = pkgs.haskellPackages;
+        haskellPackages = pkgs.haskellPackages.extend overlay;
+      in
+      {
+        packages = {
+          inherit (haskellPackages) playground;
+          default = haskellPackages.playground;
+        };
 
-        jailbreakUnbreak = pkg:
-          pkgs.haskell.lib.doJailbreak (pkg.overrideAttrs (_: { meta = { }; }));
-
-        packageName = "playground";
-      in {
-        packages.${packageName} =
-          haskellPackages.callCabal2nix "cabal/$packageName" (self + "/cabal") rec {
-            transformers = haskellPackages.transformers_0_6_1_0;
-          };
-
-        packages.default = self.packages.${system}.${packageName};
         defaultPackage = self.packages.${system}.default;
 
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
+        devShells.default = haskellPackages.shellFor {
+          packages = p: [
+            p.playground
+          ];
+          buildInputs = with haskellPackages; [
             cabal-install
-            haskellPackages.haskell-language-server
+            haskell-language-server
             ghcid
           ];
-          inputsFrom = map (__getAttr "env") (__attrValues self.packages.${system});
         };
+
         devShell = self.devShells.${system}.default;
       });
 }
