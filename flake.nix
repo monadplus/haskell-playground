@@ -12,14 +12,21 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+      # Same nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, pre-commit-hooks, ... }:
+  outputs = { self, nixpkgs, flake-utils, pre-commit-hooks, gitignore, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        inherit (gitignore.lib) gitignoreSource;
+
         overlay = self: super: {
           playground =
-            self.callCabal2nix "playground" ./cabal {
+            self.callCabal2nix "playground" (gitignoreSource ./cabal) {
               transformers = self.transformers_0_6_1_0;
             };
         };
