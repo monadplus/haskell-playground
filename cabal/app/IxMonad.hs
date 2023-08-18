@@ -8,6 +8,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
 module IxMonad where
 
@@ -56,7 +57,7 @@ type Close (key :: k) (ts :: [k]) =
   Filter (Not <=< TyEq key) ts
 
 closeFile ::
-  Eval (IsOpen key open) ~ 'True =>
+  'True ~ Eval (IsOpen key open) =>
   Handle s key ->
   Linear
     s

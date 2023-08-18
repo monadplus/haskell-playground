@@ -7,13 +7,17 @@ maintainer:    arnauabella@gmail.com
 build-type:    Simple
 
 common warnings
-  ghc-options: -Wall
+  ghc-options:
+    -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
+    -Wincomplete-record-updates -Wredundant-constraints
+    -Wnoncanonical-monad-instances -Wincomplete-patterns
 
 executable playground
   import:           warnings
   main-is:          Main.hs
   other-modules:
     DecideConstr
+    DependentFieldsStruct
     HasC
     IxMonad
 
@@ -22,6 +26,7 @@ executable playground
     , do-notation           ^>=0.1
     , first-class-families  ^>=0.8
     , indexed               ^>=0.1
+    , text                  ^>=1.2
     , transformers          ^>=0.6
 
   hs-source-dirs:   app
