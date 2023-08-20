@@ -20,6 +20,7 @@ executable playground
     DependentFieldsStruct
     HasC
     IxMonad
+    UnsafePerformIO
 
   build-depends:
     , base                  >=4.16 && <5
