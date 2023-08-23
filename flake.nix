@@ -31,7 +31,7 @@
         overlay = self: super: {
           haskell = super.haskell // {
             packages = super.haskell.packages // {
-              ghc928 = super.haskell.packages.ghc928.override (old: {
+              ghc945 = super.haskell.packages.ghc945.override (old: {
                 overrides =
                   let
                     oldOverrides = old.overrides or (_: _: { });
@@ -61,7 +61,7 @@
 
         config.allowBroken = true;
         pkgs = import nixpkgs { inherit config system; overlays = [ overlay ]; };
-        haskellPackages = pkgs.haskell.packages.ghc928;
+        haskellPackages = pkgs.haskell.packages.ghc945;
       in
       {
         packages = {
@@ -82,7 +82,7 @@
             pkgs.nixpkgs-fmt
             ormolu
             cabal-fmt
-            ghcid
+            pkgs.haskell.packages.ghc928.ghcid
             hlint
           ];
         };
