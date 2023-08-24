@@ -1,5 +1,6 @@
 -- https://github.com/haskellfoundation/hs-opt-handbook.github.io
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE UnboxedTuples #-}
 -- Need to disable optimizations because GHC will recognize and perform
 -- let-floating for us!
 {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
@@ -16,17 +17,17 @@ import Debug.Trace (traceMarker, traceMarkerIO)
 import System.Random (mkStdGen)
 import System.Random.Stateful (newIOGenM, uniformRM)
 
--- lazy_mean :: [Double] -> Double
--- lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
---   where
---     (s, ln) = foldl step (0, 0) xs
---     step (s, ln) a = (s + a, ln + 1)
+lazy_mean :: [Double] -> Double
+lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
+  where
+    (s, ln) = foldl step (0, 0) xs
+    step (s, ln) a = (s + a, ln + 1)
 
 stricter_mean :: [Double] -> Double
-stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+stricter_mean xs = traceMarker "Begin: stricter_mean" s / fromIntegral (traceMarker "ln" ln)
   where
     (s, ln) = foldl' step (0, 0) xs
-    step (!s, !ln) a = (s + a, ln + 1)
+    step (s, ln) a = (s + a, ln + 1)
 
 strict_mean :: [Double] -> Double
 strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
@@ -45,9 +46,9 @@ main = do
   test_values <- replicateM 50000 genValue >>= evaluate . force
   traceMarkerIO "End Bench Initialization"
   wait
-  -- print $! lazy_mean test_values
-  -- traceMarkerIO "End lazy_mean"
-  -- wait
+  print $! lazy_mean test_values
+  traceMarkerIO "End lazy_mean"
+  wait
   print $! stricter_mean test_values
   traceMarkerIO "End stricter_mean"
   wait
