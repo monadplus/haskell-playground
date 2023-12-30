@@ -34,13 +34,10 @@ executable playground
   hs-source-dirs:   app
   default-language: Haskell2010
 
--- Don't forget to `cabal configure cabal configure --disable-documentation --enable-library-profiling`
 benchmark pointerChasing
   type:             exitcode-stdio-1.0
   default-language: Haskell2010
   ghc-options:      -fforce-recomp -threaded -rtsopts -prof -eventlog
-
-  -- "-with-rtsopts=-hy -l-agu -i0.0001" instead of --benchmark-options=...
   build-depends:
     , base        >=4.15
     , containers

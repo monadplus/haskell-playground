@@ -35,7 +35,6 @@ strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
     (s, ln) = foldl' step (0, 0) xs
     step (!s, !ln) a = (s + a, ln + 1)
 
--- cabal bench pointerChasing --benchmark-options='+RTS -hy -l-agu -i0.0001 -RTS' && eventlog2html pointerChasing.eventlog && xdg-open pointerChasing.eventlog.html
 main :: IO ()
 main = do
   let wait = threadDelay 100000
