@@ -21,6 +21,7 @@ executable playground
     DependentFieldsStruct
     HasC
     IxMonad
+    Linear
     UnsafePerformIO
 
   build-depends:
@@ -28,6 +29,7 @@ executable playground
     , do-notation           ^>=0.1
     , first-class-families  ^>=0.8
     , indexed               ^>=0.1
+    , linear-base           ^>=0.4
     , text                  ^>=2.0
     , transformers          ^>=0.6
 
