@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
@@ -31,16 +31,26 @@
         overlay = self: super: {
           haskell = super.haskell // {
             packages = super.haskell.packages // {
-              ghc945 = super.haskell.packages.ghc945.override (old: {
+              ghc963 = super.haskell.packages.ghc963.override (old: {
                 overrides =
                   let
                     oldOverrides = old.overrides or (_: _: { });
 
                     manualOverrides = haskPkgsNew: haskPkgsOld:
                       {
+                        linear-generics_0_2_2 =
+                          haskPkgsOld.linear-generics_0_2_2.override {
+                            th-abstraction = haskPkgsNew.th-abstraction_0_5_0_0;
+                          };
+
+                        linear-base_0_4_0 =
+                          haskPkgsOld.linear-base_0_4_0.override {
+                            linear-generics = haskPkgsNew.linear-generics_0_2_2;
+                          };
+
                         playground =
                           haskPkgsOld.playground.override {
-                            transformers = haskPkgsNew.transformers_0_6_1_0;
+                            linear-base = haskPkgsNew.linear-base_0_4_0;
                           };
                       };
 
@@ -61,7 +71,7 @@
 
         config.allowBroken = true;
         pkgs = import nixpkgs { inherit config system; overlays = [ overlay ]; };
-        haskellPackages = pkgs.haskell.packages.ghc945;
+        haskellPackages = pkgs.haskell.packages.ghc963;
       in
       {
         packages = {
