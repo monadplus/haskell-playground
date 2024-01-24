@@ -38,10 +38,12 @@
 
                     manualOverrides = haskPkgsNew: haskPkgsOld:
                       {
-                        playground =
-                          haskPkgsOld.playground.override {
-                            transformers = haskPkgsNew.transformers_0_6_1_0;
-                          };
+                        th-abstraction = haskPkgsOld.th-abstraction_0_5_0_0;
+                        linear-generics = haskPkgsOld.linear-generics_0_2_2;
+                        # playground =
+                        #   haskPkgsOld.playground.override {
+                        #     transformers = haskPkgsNew.transformers_0_6_1_0;
+                        #   };
                       };
 
                     packageSources =
