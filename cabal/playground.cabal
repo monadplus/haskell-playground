@@ -22,6 +22,7 @@ executable playground
     HasC
     IxMonad
     UnsafePerformIO
+    VariadicVec
 
   build-depends:
     , base                  >=4.16 && <5
