@@ -34,21 +34,27 @@ executable playground
     Singletons.Singleton5
     UnsafePerformIO
     VariadicVec
+    Vector.Inductive
+    Vector.Vector1
+    Vector.Vector2
 
   -- TODO: generic-lens fails on nix
   build-depends:
-    , base                  >=4.16   && <5
-    , do-notation           ^>=0.1
-    , first-class-families  ^>=0.8
-    , generic-lens          ^>=2.2.2
-    , indexed               ^>=0.1
-    , linear-base           ^>=0.4
-    , mtl                   ^>=2.3
-    , singletons            ^>=3.0
-    , singletons-base       ^>=3.2
-    , singletons-th         ^>=3.2
-    , text                  ^>=2.0
-    , transformers          ^>=0.6
+    , base                       >=4.16   && <5
+    , do-notation                ^>=0.1
+    , finite-typelits            ^>=0.1
+    , first-class-families       ^>=0.8
+    , generic-lens               ^>=2.2.2
+    , ghc-typelits-natnormalise  ^>=0.7
+    , indexed                    ^>=0.1
+    , linear-base                ^>=0.4
+    , mtl                        ^>=2.3
+    , singletons                 ^>=3.0
+    , singletons-base            ^>=3.2
+    , singletons-th              ^>=3.2
+    , text                       ^>=2.0
+    , transformers               ^>=0.6
+    , vector                     ^>=0.13
 
   hs-source-dirs:   app
   default-language: Haskell2010
