@@ -10,7 +10,7 @@ common warnings
   ghc-options:
     -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
     -Wincomplete-record-updates -Wredundant-constraints
-    -Wnoncanonical-monad-instances -Wincomplete-patterns -eventlog
+    -Wnoncanonical-monad-instances -Wincomplete-patterns
     "-with-rtsopts=-l -hi -i0.5"
 
 executable playground
@@ -21,14 +21,32 @@ executable playground
     DependentFieldsStruct
     HasC
     IxMonad
+    Linear
+    Read
+    Singletons.Exercises1
+    Singletons.Exercises2
+    Singletons.Exercises3
+    Singletons.Exercises4
+    Singletons.Singleton1
+    Singletons.Singleton2
+    Singletons.Singleton3
+    Singletons.Singleton4
+    Singletons.Singleton5
     UnsafePerformIO
     VariadicVec
 
+  -- TODO: generic-lens fails on nix
   build-depends:
-    , base                  >=4.16 && <5
+    , base                  >=4.16   && <5
     , do-notation           ^>=0.1
     , first-class-families  ^>=0.8
+    , generic-lens          ^>=2.2.2
     , indexed               ^>=0.1
+    , linear-base           ^>=0.4
+    , mtl                   ^>=2.3
+    , singletons            ^>=3.0
+    , singletons-base       ^>=3.2
+    , singletons-th         ^>=3.2
     , text                  ^>=2.0
     , transformers          ^>=0.6
 
@@ -38,7 +56,7 @@ executable playground
 benchmark pointerChasing
   type:             exitcode-stdio-1.0
   default-language: Haskell2010
-  ghc-options:      -fforce-recomp -threaded -rtsopts -prof -eventlog
+  ghc-options:      -fforce-recomp -threaded -rtsopts -prof
   build-depends:
     , base        >=4.15
     , containers
