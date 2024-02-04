@@ -17,6 +17,7 @@ executable playground
   import:           warnings
   main-is:          Main.hs
   other-modules:
+    Async
     DecideConstr
     DependentFieldsStruct
     HasC
@@ -40,6 +41,7 @@ executable playground
 
   -- TODO: generic-lens fails on nix
   build-depends:
+    , async                      ^>=2.2
     , base                       >=4.16   && <5
     , do-notation                ^>=0.1
     , finite-typelits            ^>=0.1
@@ -52,6 +54,7 @@ executable playground
     , singletons                 ^>=3.0
     , singletons-base            ^>=3.2
     , singletons-th              ^>=3.2
+    , stm                        ^>=2.5
     , text                       ^>=2.0
     , transformers               ^>=0.6
     , vector                     ^>=0.13
@@ -64,11 +67,24 @@ benchmark pointerChasing
   default-language: Haskell2010
   ghc-options:      -fforce-recomp -threaded -rtsopts -prof
   build-depends:
-    , base        >=4.15
+    , base        >=4.16 && <5
     , containers
     , deepseq
     , gauge
     , random
 
   hs-source-dirs:   bench/PointerChasing
+  main-is:          Main.hs
+
+benchmark squaring
+  type:             exitcode-stdio-1.0
+  default-language: Haskell2010
+  ghc-options:      -O2
+  build-depends:
+    , base        >=4.16 && <5
+    , bytestring
+    , gauge
+    , text        >=2.0
+
+  hs-source-dirs:   bench/Squaring
   main-is:          Main.hs
