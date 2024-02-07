@@ -17,6 +17,7 @@ executable playground
   import:           warnings
   main-is:          Main.hs
   other-modules:
+    AndPatterns
     Async
     DecideConstr
     DependentFieldsStruct
