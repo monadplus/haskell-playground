@@ -3,6 +3,12 @@
 
 BROWSER=firefox
 
+a-no-worker-wrapper: A.hs ## ghc -c A.hs without worker-wrapper transform
+	ghc -c -fforce-recomp -ddump-to-file -dno-typeable-binds -dsuppress-coercions -dsuppress-module-prefixes  -dsuppress-type-applications -ddump-simpl -ddump-stg-final -O -fno-worker-wrapper A.hs
+
+a-worker-wrapper: A.hs ## ghc -c A.hs
+	ghc -c -fforce-recomp -ddump-to-file -dno-typeable-binds -dsuppress-coercions -dsuppress-module-prefixes  -dsuppress-type-applications -ddump-simpl -ddump-stg-final -O A.hs
+
 large-thunk-ht: ## LargeThunk +RTS -l -hT -i0.5 -RTS
 	ghc -fforce-recomp -eventlog -rtsopts -O2 LargeThunk
 	./LargeThunk 100000 100000 30000000 +RTS -l-agu -hT -i0.5 -RTS
