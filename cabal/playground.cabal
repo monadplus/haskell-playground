@@ -21,6 +21,7 @@ executable playground
     Async
     DecideConstr
     DependentFieldsStruct
+    Dynamic
     HasC
     IxMonad
     Linear
