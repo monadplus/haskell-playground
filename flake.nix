@@ -31,27 +31,27 @@
         overlay = self: super: {
           haskell = super.haskell // {
             packages = super.haskell.packages // {
-              ghc963 = super.haskell.packages.ghc963.override (old: {
+              ghc966 = super.haskell.packages.ghc966.override (old: {
                 overrides =
                   let
                     oldOverrides = old.overrides or (_: _: { });
 
                     manualOverrides = haskPkgsNew: haskPkgsOld:
                       {
-                        linear-generics_0_2_2 =
-                          haskPkgsOld.linear-generics_0_2_2.override {
-                            th-abstraction = haskPkgsNew.th-abstraction_0_5_0_0;
-                          };
-
-                        linear-base_0_4_0 =
-                          haskPkgsOld.linear-base_0_4_0.override {
-                            linear-generics = haskPkgsNew.linear-generics_0_2_2;
-                          };
-
-                        playground =
-                          haskPkgsOld.playground.override {
-                            linear-base = haskPkgsNew.linear-base_0_4_0;
-                          };
+                        # linear-generics_0_2_2 =
+                        #   haskPkgsOld.linear-generics_0_2_2.override {
+                        #     th-abstraction = haskPkgsNew.th-abstraction_0_5_0_0;
+                        #   };
+                        #
+                        # linear-base_0_4_0 =
+                        #   haskPkgsOld.linear-base_0_4_0.override {
+                        #     linear-generics = haskPkgsNew.linear-generics_0_2_2;
+                        #   };
+                        #
+                        # playground =
+                        #   haskPkgsOld.playground.override {
+                        #     linear-base = haskPkgsNew.linear-base_0_4_0;
+                        #   };
                       };
 
                     packageSources =
@@ -71,7 +71,7 @@
 
         config.allowBroken = true;
         pkgs = import nixpkgs { inherit config system; overlays = [ overlay ]; };
-        haskellPackages = pkgs.haskell.packages.ghc963;
+        haskellPackages = pkgs.haskell.packages.ghc966;
       in
       {
         packages = {
@@ -92,7 +92,7 @@
             pkgs.nixpkgs-fmt
             ormolu
             cabal-fmt
-            pkgs.haskell.packages.ghc928.ghcid
+            pkgs.haskell.packages.ghc966.ghcid
             hlint
           ];
         };
