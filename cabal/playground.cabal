@@ -40,6 +40,7 @@ executable playground
     Vector.Inductive
     Vector.Vector1
     Vector.Vector2
+    Void
 
   -- TODO: generic-lens fails on nix
   build-depends:
